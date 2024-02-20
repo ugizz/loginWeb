@@ -3,6 +3,8 @@ import { NextPageWithLayout } from "@/pages/_app";
 import {Button, Container, Grid, TextField} from "@mui/material";
 import {useLoginUser} from "@/quires/useLogin.query";
 import {useRouter} from "next/router";
+import { Unity, useUnityContext } from "react-unity-webgl";
+
 
 
 const Page: NextPageWithLayout = () => {
@@ -11,7 +13,9 @@ const Page: NextPageWithLayout = () => {
     const { trigger: loginUser, data, error } = useLoginUser();
     const [Id, setId] = React.useState("");
     const [Password, setPassword] = React.useState("");
+    // const unityContext = useUnityContext();
 
+    const [Error, setError] = React.useState("");
 
     const onIdHandler = e => {
         setId(e.target.value)
@@ -26,24 +30,38 @@ const Page: NextPageWithLayout = () => {
 
     const handleLoginClick = async (event)=>{
         const Data = await loginUser({id:Id,pw:Password});
-        const Data2 = JSON.stringify(Data)
-        console.log(`이 데이터는!!!! `+Data2);
         
-        if (Data2.indexOf("Request failed") !== -1) {
-            console.log(`Error!`,Data2)
-            console.log(Data2.indexOf("Request failed"))
+        if(Data.statusCode === 0) {
+            console.log(`이것도!${Data.data.accessToken}`);
+            // unityContext.sendMessage(
+            //     "webViewObject",
+            //     "HandleAccessToken",
+            //     Data.data.accessToken // 엑세스 토큰을 Unity로 전달
+            //   );
+            // 유니티에 토큰 전달
+            // unityContext.sendMessage("AuthenticationManager", "ReceiveToken", Data.data.accessToken);
+
+            // 유니티 씬으로 이동
+            //await router.push("/unity-scene");
+
+            // 유니티에 토큰 전달
+            await router.push("/signup");// 여기를 unity 씬으로 연결하면 된다. 연결할때 Data2에 담긴 토큰도 같이 전달해야한다.
+        }
+
+        if (Data.statusCode !== 0) {
+            console.log(`Error!`,Data.message)
+            // console.log(Data2.indexOf("Request failed"))
+            setError("존재하지 않는 아이디이거나 비밀번호가 일치하지 않습니다.")
             return
         }
     
-        if(Data2) {
-        console.log(`이것도!${Data2}`);
-        await router.push("/signup");// 여기를 unity 씬으로 연결하면 된다. 연결할때 Data2에 담긴 토큰도 같이 전달해야한다.
-        }
     }
 
     const signup = async () => {
         await router.push("/signup");
     }
+
+    
 
     return (
     <>
@@ -81,11 +99,11 @@ const Page: NextPageWithLayout = () => {
                 onChange={onPasswordHandler}
                 />
             </Grid>
-            {/* {Error && (
+            {Error && (
                         <Grid item xs={12}>
-                            <p style={{ color: "red" }}>{`Error`}</p>
+                            <p style={{ color: "red" }}>{Error}</p>
                         </Grid>
-                    )} */}
+                    )}
             <Grid
                 mt={2}
                 mb={2}

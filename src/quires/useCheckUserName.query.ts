@@ -2,18 +2,16 @@ import axios from "axios";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-const QUERY_KEY = "https://api.ugizz.store/auth/signin";
+const QUERY_KEY = "https://api.ugizz.store/auth/check-username/";
 
-export const useLoginUser = () => {
+export const useCheckUserName = () => {
   const fetcher = async (
       apiURL: string,
-      { arg }: { arg: { id: string; pw: string } }
+      { arg }: { arg: { id: string } }
   ) => {
     return axios
-        .post(`${apiURL}`, {
-          "address": arg.id,
-          "passwd": arg.pw
-        })
+        .get(`${apiURL}${arg.id}`)
+
         .then((res) => {
           console.log(`데이터`,res.data);
           return res.data
@@ -30,8 +28,4 @@ export const useLoginUser = () => {
   );
 
   return { trigger, data, error };
-  //return useSWRMutation(
-    //  `${QUERY_KEY}`,
-      //fetcher
-  //);
 };

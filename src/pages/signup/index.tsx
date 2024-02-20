@@ -1,7 +1,9 @@
 import * as React from "react";
 import { NextPageWithLayout } from "@/pages/_app";
-import {Button, Container, Grid, TextField} from "@mui/material";
+import {Button, Container, Grid, Stack, TextField} from "@mui/material";
 import {useSignUpUser} from "@/quires/useSignUp.query";
+import {useCheckUserName} from "@/quires/useCheckUserName.query";
+import {useCheckNickName} from "@/quires/useCheckNickName.query";
 import { useGuestLoginUser } from "@/quires/useGuestLogin.query";
 import {useRouter} from "next/router";
 
@@ -10,11 +12,15 @@ const Page: NextPageWithLayout = () => {
     
     const router = useRouter();
     const { trigger: signUpUser  } = useSignUpUser();
+    const { trigger: checkUserName  } = useCheckUserName();
+    const { trigger: checkNickName  } = useCheckNickName();
     const [Id, setId] = React.useState("");
     const [Password, setPassword] = React.useState("");
     const [Passwordcon, setPasswordcon] = React.useState("");
     const [Email, setEmail] = React.useState("");
     const [Nick, setNick] = React.useState("");
+    const [CheckId, setCheckId] = React.useState("");
+    const [CheckNick, setCheckNick] = React.useState("");
 
     const [Error, setError] = React.useState("");
 
@@ -31,8 +37,8 @@ const Page: NextPageWithLayout = () => {
     };
 
     const onEmailHandler = e => {
-            setEmail(e.target.value)
-        };
+        setEmail(e.target.value)
+    };
 
     const onNickHandler =e => {
         setNick(e.target.value)
@@ -57,19 +63,16 @@ const Page: NextPageWithLayout = () => {
         }
 
         const Data = await signUpUser({ id:Id, pw: Password, email:Email, nick:Nick });
-        const Data2 = JSON.stringify(Data)
-        console.log(`이 데이터는!!!! `+Data2);
+        console.log(`이 데이터는!!!! `+Data);
         
-        if (Data2.indexOf("Request failed") !== -1) {
-            console.log(`Error!`,Data2)
-            console.log(Data2.indexOf("Request failed"))
-            setError("이미 존재하는 아이디이거나 형식이 올바르지 않습니다.")
+        if (Data.statusCode !== 0) {
+            console.log(`Error!`,Data)
+            setError("이미 존재하는 아이디/닉네임이거나 형식이 올바르지 않습니다.")
             return
         }
     
-        if(Data2) {
-        console.log(`이것도!${Data2}`);
-        console.log(Data2.indexOf("Request failed"))
+        if(Data.statusCode === 0) {
+        console.log(`이것도!${Data}`);
         await router.push("/login"); 
         }
     }
@@ -80,6 +83,32 @@ const Page: NextPageWithLayout = () => {
         }
         await signUpUser({ id:Id, pw: Password, email:Email, nick:Nick });
         await router.push("/login");
+    }
+
+    const handleCheckUserId = async (event) => {
+        const chkdata = await checkUserName({id:Id})
+        if(chkdata.statusCode === 0) {
+            if(chkdata.data.check == false) {
+                setCheckId("이미 존재하는 아이디입니다.")
+            }
+            if(chkdata.data.check == true) {
+                setCheckId("사용 가능한 아이디입니다.")
+            }
+        }
+
+    }
+
+    const handleCheckNickName = async (event) => {
+        const chkdata = await checkNickName({nick:Nick})
+        if(chkdata.statusCode === 0) {
+            if(chkdata.data.check == false) {
+                setCheckNick("이미 존재하는 닉네임입니다.")
+            }
+            if(chkdata.data.check == true) {
+                setCheckNick("사용 가능한 닉네임입니다.")
+            }
+        }
+
     }
 
     const guestjoin = async () => {
@@ -94,29 +123,29 @@ const Page: NextPageWithLayout = () => {
     return (
     <>
         <Container maxWidth="sm">
-            <Grid
-                mt={2}
-                mb={2}
-                container
-                item
-                xs={12}
-                justifyContent="center"
-                alignItems="center"
-            >
+        <Stack spacing={2} direction="column">
+            <Stack spacing={2} direction="row" alignItems="center">
                 <TextField id="outlined-basic" 
                 label="아이디" 
                 variant="outlined"
+                helperText= {CheckId}
                 value = {Id}
                 onChange={onIdHandler} 
                 />
-            </Grid>
+                <Button
+                    variant="outlined"
+                    onClick={handleCheckUserId}
+                >
+                    중복 확인
+                </Button>
+            </Stack>
             <Grid
                 mt={2}
                 mb={2}
                 container
                 item
                 xs={12}
-                justifyContent="center"
+                //justifyContent="center"
                 alignItems="center"
             >
                 <TextField id="outlined-basic" 
@@ -134,7 +163,7 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                justifyContent="center"
+                
                 alignItems="center"
             >
                 <TextField id="outlined-basic" 
@@ -153,7 +182,7 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                justifyContent="center"
+                //justifyContent="center"
                 alignItems="center"
             >
                 <TextField id="outlined-basic" 
@@ -163,22 +192,22 @@ const Page: NextPageWithLayout = () => {
                 onChange={onEmailHandler}
                 />
             </Grid>
-            <Grid
-                mt={2}
-                mb={2}
-                container
-                item
-                xs={12}
-                justifyContent="center"
-                alignItems="center"
-            >
+            <Stack spacing={2} direction="row" alignItems="center">
                 <TextField id="outlined-basic" 
                 label="인게임 닉네임" 
                 variant="outlined"
+                helperText= {CheckNick}
                 value = {Nick}
                 onChange={onNickHandler}
                 />
-            </Grid>
+                <Button
+                    variant="outlined"
+                    onClick={handleCheckNickName}
+                >
+                    중복 확인
+                </Button>
+            </Stack>
+            </Stack>
             {Error && (
                         <Grid item xs={12}>
                             <p style={{ color: "red" }}>{Error}</p>
@@ -190,15 +219,25 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                justifyContent="center"
+                //justifyContent="center"
                 alignItems="center"
             >
+            <Stack spacing={2} direction="row" alignItems="center">
                 <Button
-                    variant="text"
+                    variant="outlined"
                     onClick={handleSingUpClick}
                 >
                     가입하기
                 </Button>
+                <Button
+                    variant="outlined"
+                    onClick={async (event)=>{
+                        await guestjoin();
+                    }}
+                >
+                    게스트 로그인
+                </Button>
+            </Stack>
             </Grid>
             <Grid
                 mt={2}
@@ -206,18 +245,12 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                justifyContent="right"
+                //justifyContent="center"
                 alignItems="center"
             >
-                <Button
-                    variant="text"
-                    onClick={async (event)=>{
-                        await guestjoin();
-                    }}
-                >
-                    게스트 로그인
-                </Button>
+                
             </Grid>
+       
         </Container>
     </>
   );
