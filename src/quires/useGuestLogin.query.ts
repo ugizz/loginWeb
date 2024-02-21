@@ -7,7 +7,7 @@ const QUERY_KEY = "https://api.ugizz.store/auth/guest/signin";
 export const useGuestLoginUser = () => {
   const fetcher = async (
       apiURL: string,
-      { arg }: { arg: { gid: string } }
+      { arg }: { arg: { gid: string | null } }
   ) => {
     return axios
         .post(`${apiURL}`, {

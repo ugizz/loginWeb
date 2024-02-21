@@ -2,6 +2,7 @@ import * as React from "react";
 import { NextPageWithLayout } from "@/pages/_app";
 import {Button, Container, Grid, TextField} from "@mui/material";
 import {useGuestLoginUser} from "@/quires/useGuestLogin.query";
+import {useGuestSignUpUser} from "@/quires/useGuestSignUp.query";
 import {useRouter} from "next/router";
 import { useParams } from "next/navigation";
 
@@ -9,34 +10,39 @@ const Page: NextPageWithLayout = () => {
     
     const router = useRouter();
     const { trigger: guestLoginUser  } = useGuestLoginUser();
-    const [GId, setGId] = React.useState("");
+    const { trigger: guestSignUpUser  } = useGuestSignUpUser();
+    const [Nick, setNick] = React.useState("");
     const [Password, setPassword] = React.useState("");
 
-    const { dataFromOtherPage } = useParams();
-
-    const onIdHandler = e => {
-        setGId(e.target.value)
+    const onNickHandler = e => {
+        setNick(e.target.value)
         console.log(e.target.value)
-        console.log(GId);
+        console.log(Nick);
     };
 
-    const onPasswordHandler =e => {
-        setPassword(e.target.value)
-        console.log(e.target.value)
-    };
+    let params ;
+    let Gid 
+    if (typeof window !== "undefined") {
+       params = new URLSearchParams(window!.location!.search!);
+       Gid = params.get("deviceId");
+      }
 
-    const join = async () => {
-        await router.push("/signup");
-    }
-    
-    const signup = async () => {
-        await router.push("/signup");
+
+    const handleGuest = async () => {
+        const Data = await guestSignUpUser({gid:Gid,nick:Nick});
+        if(Data.statusCode === 0) {
+            const Data2 = await guestLoginUser({gid:Gid});
+            await router.push(`/login?accessToken=${Data2.data.accessToken}`);
+        }
+        if(Data.statusCode !== 0) {
+            console.log(`다시해봐`)
+            return
+        }
     }
 
     return (
     <>
         <Container maxWidth="sm">
-            <p>Data from other page: {dataFromOtherPage}</p>
             <Grid
                 mt={2}
                 mb={2}
@@ -47,28 +53,10 @@ const Page: NextPageWithLayout = () => {
                 alignItems="center"
             >
                 <TextField id="outlined-basic" 
-                label="아이디" 
+                label="인게임 닉네임" 
                 variant="outlined"
-                value = {GId}
-                onChange={onIdHandler} />
-            </Grid>
-            <Grid
-                mt={2}
-                mb={2}
-                container
-                item
-                xs={12}
-                justifyContent="center"
-                alignItems="center"
-            >
-                <TextField id="outlined-basic" 
-                label="비밀번호" 
-                variant="outlined"
-                type="password"
-                autoComplete="current-password"
-                value = {Password}
-                onChange={onPasswordHandler}
-                />
+                value = {Nick}
+                onChange={onNickHandler} />
             </Grid>
             <Grid
                 mt={2}
@@ -80,31 +68,10 @@ const Page: NextPageWithLayout = () => {
                 alignItems="center"
             >
                 <Button
-                    variant="text"
-                    onClick={async (event)=>{
-                        //loginUser({id:GId,pw:Password})
-                        await join();
-                    }}
+                    variant="outlined"
+                    onClick={handleGuest}
                 >
-                    로그인
-                </Button>
-            </Grid>
-            <Grid
-                mt={2}
-                mb={2}
-                container
-                item
-                xs={12}
-                justifyContent="right"
-                alignItems="center"
-            >
-                <Button
-                    variant="text"
-                    onClick={async (event)=>{
-                        await signup();
-                    }}
-                >
-                    가입하기
+                    게스트 로그인
                 </Button>
             </Grid>
         </Container>

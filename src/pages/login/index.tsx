@@ -36,24 +36,11 @@ const Page: NextPageWithLayout = () => {
         
         if(Data.statusCode === 0) {
             console.log(`이것도!${Data.data.accessToken}`);
-            // unityContext.sendMessage(
-            //     "webViewObject",
-            //     "HandleAccessToken",
-            //     Data.data.accessToken // 엑세스 토큰을 Unity로 전달
-            //   );
-            // 유니티에 토큰 전달
-            // unityContext.sendMessage("AuthenticationManager", "ReceiveToken", Data.data.accessToken);
-
-            // 유니티 씬으로 이동
-            //await router.push("/unity-scene");
-
-            // 유니티에 토큰 전달
             await router.push(`/login?accessToken=${Data.data.accessToken}`);// 여기를 unity 씬으로 연결하면 된다. 연결할때 Data2에 담긴 토큰도 같이 전달해야한다.
         }
 
         if (Data.statusCode !== 0) {
             console.log(`Error!`,Data.message)
-            // console.log(Data2.indexOf("Request failed"))
             setError("존재하지 않는 아이디이거나 비밀번호가 일치하지 않습니다.")
             return
         }
@@ -63,26 +50,25 @@ const Page: NextPageWithLayout = () => {
     const signup = async () => {
         await router.push("/signup");
     }
-
-    const {deviceId} = useParams();
-
-    const params = new URLSearchParams(window.location.search);
-    let Gid = params.get("deviceId");
+    let params ;
+    let Gid
+    if (typeof window !== "undefined") {
+       params = new URLSearchParams(window!.location!.search!);
+       Gid = params.get("deviceId");
+    }
 
     const handleGuest = async () => {
-        // 게스트 로그인 시 디바이스 아이디를 받아오는 로직
-        // const deviceId = navigator.userAgent;
-        console.log("디바이스 아이디:", deviceId);
-        console.log("아니 제발",Gid);
-        // const Data = await guestLoginUser({gid:Gid});
+        console.log("디바이스 아이디:", Gid);
+        const Data = await guestLoginUser({gid:Gid});
         
-        // if(Data.statusCode === 0) { // 게스트 로그인 처리
-
-        // }
-        // if(Data.statusCode !== 0) {
-        //     console.log("됐냐?")
-        //     await history.pushState("/guest",Gid);
-        // }
+        if(Data.statusCode === 0) { // 게스트 로그인 처리
+            console.log("됐냐?")
+            await router.push(`/login?accessToken=${Data.data.accessToken}`);
+        }
+        if(Data.statusCode !== 0) {
+            console.log("안됐냐?")
+            await router.push(`/guest?deviceId=${Gid}`);
+        }
     }
 
     return (
