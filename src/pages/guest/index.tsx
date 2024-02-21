@@ -32,7 +32,7 @@ const Page: NextPageWithLayout = () => {
         const Data = await guestSignUpUser({gid:Gid,nick:Nick});
         if(Data.statusCode === 0) {
             const Data2 = await guestLoginUser({gid:Gid});
-            await router.push(`/login?accessToken=${Data2.data.accessToken}`);
+            await router.push(`/success?accessToken=${Data2.data.accessToken}`);
         }
         if(Data.statusCode !== 0) {
             console.log(`다시해봐`)
