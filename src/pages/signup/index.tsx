@@ -122,18 +122,18 @@ const Page: NextPageWithLayout = () => {
 
     return (
     <>
-        <Container maxWidth="sm">
-        <Stack spacing={2} direction="column">
-            <Stack spacing={2} direction="row" alignItems="center">
-                <TextField id="outlined-basic" 
-                label="아이디" 
-                variant="outlined"
+        <Container maxWidth={"sm"}>
+        <Stack spacing={2} direction={"column"}>
+            <Stack spacing={2} direction={"row"} alignItems={"center"}>
+                <TextField id={"outlined-basic" }
+                label={"아이디" }
+                variant={"outlined"}
                 helperText= {CheckId}
                 value = {Id}
                 onChange={onIdHandler} 
                 />
                 <Button
-                    variant="outlined"
+                    variant={"outlined"}
                     onClick={handleCheckUserId}
                 >
                     중복 확인
@@ -145,14 +145,13 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                //justifyContent="center"
-                alignItems="center"
+                alignItems={"center"}
             >
-                <TextField id="outlined-basic" 
-                label="비밀번호" 
-                variant="outlined"
-                type="password"
-                autoComplete="current-password"
+                <TextField id={"outlined-basic"} 
+                label={"비밀번호"} 
+                variant={"outlined"}
+                type={"password"}
+                autoComplete={"current-password"}
                 value = {Password}
                 onChange={onPasswordHandler} 
                 />
@@ -164,14 +163,14 @@ const Page: NextPageWithLayout = () => {
                 item
                 xs={12}
                 
-                alignItems="center"
+                alignItems={"center"}
             >
-                <TextField id="outlined-basic" 
+                <TextField id={"outlined-basic"} 
                 error = {Password!==Passwordcon}
-                label="비밀번호 확인" 
-                variant="outlined"
-                type="password"
-                autoComplete="current-password" 
+                label={"비밀번호 확인"}
+                variant={"outlined"}
+                type={"password"}
+                autoComplete={"current-password"} 
                 value = {Passwordcon}
                 onChange={onPasswordconHandler} 
                 />
@@ -182,26 +181,25 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                //justifyContent="center"
-                alignItems="center"
+                alignItems={"center"}
             >
-                <TextField id="outlined-basic" 
-                label="이메일" 
-                variant="outlined"
+                <TextField id={"outlined-basic"} 
+                label={"이메일"} 
+                variant={"outlined"}
                 value = {Email}
                 onChange={onEmailHandler}
                 />
             </Grid>
-            <Stack spacing={2} direction="row" alignItems="center">
-                <TextField id="outlined-basic" 
-                label="인게임 닉네임" 
-                variant="outlined"
+            <Stack spacing={2} direction={"row"} alignItems={"center"}>
+                <TextField id={"outlined-basic"}
+                label={"인게임 닉네임" }
+                variant={"outlined"}
                 helperText= {CheckNick}
                 value = {Nick}
                 onChange={onNickHandler}
                 />
                 <Button
-                    variant="outlined"
+                    variant={"outlined"}
                     onClick={handleCheckNickName}
                 >
                     중복 확인
@@ -219,18 +217,17 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                //justifyContent="center"
-                alignItems="center"
+                alignItems={"center"}
             >
-            <Stack spacing={2} direction="row" alignItems="center">
+            <Stack spacing={2} direction={"row"} alignItems={"center"}>
                 <Button
-                    variant="outlined"
+                    variant={"outlined"}
                     onClick={handleSingUpClick}
                 >
                     가입하기
                 </Button>
                 <Button
-                    variant="outlined"
+                    variant={"outlined"}
                     onClick={async (event)=>{
                         await guestjoin();
                     }}
@@ -245,8 +242,7 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                //justifyContent="center"
-                alignItems="center"
+                alignItems={"center"}
             >
                 
             </Grid>

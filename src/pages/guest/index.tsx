@@ -42,19 +42,19 @@ const Page: NextPageWithLayout = () => {
 
     return (
     <>
-        <Container maxWidth="sm">
+        <Container maxWidth={"sm"}>
             <Grid
                 mt={2}
                 mb={2}
                 container
                 item
                 xs={12}
-                justifyContent="center"
-                alignItems="center"
+                justifyContent={"center"}
+                alignItems={"center"}
             >
-                <TextField id="outlined-basic" 
-                label="인게임 닉네임" 
-                variant="outlined"
+                <TextField id={"outlined-basic"} 
+                label={"인게임 닉네임"} 
+                variant={"outlined"}
                 value = {Nick}
                 onChange={onNickHandler} />
             </Grid>
@@ -64,11 +64,11 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                justifyContent="center"
-                alignItems="center"
+                justifyContent={"center"}
+                alignItems={"center"}
             >
                 <Button
-                    variant="outlined"
+                    variant={"outlined"}
                     onClick={handleGuest}
                 >
                     게스트 로그인

@@ -17,7 +17,7 @@ const Index: NextPageWithLayout = (props: Props) => {
       <br />
       <br />
       <Button
-        variant="outlined"
+        variant={"outlined"}
         onClick={() =>
           alert({
             open: true,

@@ -73,19 +73,19 @@ const Page: NextPageWithLayout = () => {
 
     return (
     <>
-        <Container maxWidth="sm">
+        <Container maxWidth={"sm"}>
             <Grid
                 mt={2}
                 mb={2}
                 container
                 item
                 xs={12}
-                justifyContent="center"
-                alignItems="center"
+                justifyContent={"center"}
+                alignItems={"center"}
             >
-                <TextField id="outlined-basic" 
-                label="아이디" 
-                variant="outlined"
+                <TextField id={"outlined-basic"} 
+                label={"아이디"} 
+                variant={"outlined"}
                 value = {Id}
                 onChange={onIdHandler} />
             </Grid>
@@ -95,14 +95,14 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                justifyContent="center"
-                alignItems="center"
+                justifyContent={"center"}
+                alignItems={"center"}
             >
-                <TextField id="outlined-basic" 
-                label="비밀번호" 
-                variant="outlined"
-                type="password"
-                autoComplete="current-password"
+                <TextField id={"outlined-basic"} 
+                label={"비밀번호"} 
+                variant={"outlined"}
+                type={"password"}
+                autoComplete={"current-password"}
                 value = {Password}
                 onChange={onPasswordHandler}
                 />
@@ -118,10 +118,10 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                justifyContent="center"
-                alignItems="center"
+                justifyContent={"center"}
+                alignItems={"center"}
             >
-            <Stack spacing={2} direction="row" alignItems="center">
+            <Stack spacing={2} direction={"row"} alignItems={"center"}>
                 <Button
                     variant="outlined"
                     onClick={handleLoginClick}
@@ -129,7 +129,7 @@ const Page: NextPageWithLayout = () => {
                     일반 로그인
                 </Button>
                 <Button
-                    variant="outlined"
+                    variant={"outlined"}
                     onClick={handleGuest}
                 >
                     게스트 로그인
@@ -142,11 +142,11 @@ const Page: NextPageWithLayout = () => {
                 container
                 item
                 xs={12}
-                justifyContent="right"
-                alignItems="center"
+                justifyContent={"right"}
+                alignItems={"center"}
             >
                 <Button
-                    variant="outlined"
+                    variant={"outlined"}
                     onClick={async (event)=>{
                         await signup();
                     }}
