@@ -36,6 +36,7 @@ const Page: NextPageWithLayout = () => {
         
         if(Data.statusCode === 0) {
             console.log(`이것도!${Data.data.accessToken}`);
+            location.href = "uniwebview://action?accessToken="+Data.data.accessToken;
             await router.push(`/success?accessToken=${Data.data.accessToken}`);// 여기를 unity 씬으로 연결하면 된다. 연결할때 Data2에 담긴 토큰도 같이 전달해야한다.
         }
 

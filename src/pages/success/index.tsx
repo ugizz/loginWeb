@@ -19,7 +19,8 @@ const Page: NextPageWithLayout = () => {
     }
     
     function sendToken() {
-        console.log(accessToken)
+        location.href = "uniwebview://action?accessToken="+accessToken;
+        
     }
     const { unityProvider, sendMessage } = useUnityContext({
         loaderUrl: "build/myunityapp.loader.js",
@@ -48,7 +49,7 @@ const Page: NextPageWithLayout = () => {
                     variant={"text"}
                     onClick={sendToken}
                 >
-                    {accessToken}
+                    로그인 성공
                 </Button>
             </Grid>
             
