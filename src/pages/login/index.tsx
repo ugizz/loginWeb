@@ -123,7 +123,7 @@ const Page: NextPageWithLayout = () => {
             >
             <Stack spacing={2} direction={"row"} alignItems={"center"}>
                 <Button
-                    variant="outlined"
+                    variant={"outlined"}
                     onClick={handleLoginClick}
                 >
                     일반 로그인

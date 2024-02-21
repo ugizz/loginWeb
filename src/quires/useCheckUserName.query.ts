@@ -2,7 +2,7 @@ import axios from "axios";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-const QUERY_KEY = "https://api.ugizz.store/auth/check-username/";
+const QUERY_KEY = "https://api.ugizz.store/user/userid/";
 
 export const useCheckUserName = () => {
   const fetcher = async (
@@ -10,7 +10,7 @@ export const useCheckUserName = () => {
       { arg }: { arg: { id: string } }
   ) => {
     return axios
-        .get(`${apiURL}${arg.id}`)
+        .get(`${apiURL}${arg.id}/duplicate`)
 
         .then((res) => {
           console.log(`데이터`,res.data);

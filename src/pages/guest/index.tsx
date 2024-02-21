@@ -1,9 +1,10 @@
 import * as React from "react";
 import { NextPageWithLayout } from "@/pages/_app";
-import {Button, Container, Grid, TextField} from "@mui/material";
+import {Button, Container, Grid, TextField, Stack} from "@mui/material";
 import {useGuestLoginUser} from "@/quires/useGuestLogin.query";
 import {useGuestSignUpUser} from "@/quires/useGuestSignUp.query";
 import {useRouter} from "next/router";
+import {useCheckNickName} from "@/quires/useCheckNickName.query";
 import { useParams } from "next/navigation";
 
 const Page: NextPageWithLayout = () => {
@@ -11,8 +12,9 @@ const Page: NextPageWithLayout = () => {
     const router = useRouter();
     const { trigger: guestLoginUser  } = useGuestLoginUser();
     const { trigger: guestSignUpUser  } = useGuestSignUpUser();
+    const { trigger: checkNickName  } = useCheckNickName();
     const [Nick, setNick] = React.useState("");
-    const [Password, setPassword] = React.useState("");
+    const [CheckNick, setCheckNick] = React.useState("");
 
     const onNickHandler = e => {
         setNick(e.target.value)
@@ -40,6 +42,18 @@ const Page: NextPageWithLayout = () => {
         }
     }
 
+    const handleCheckNickName = async (event) => {
+        const chkdata = await checkNickName({nick:Nick})
+        if(chkdata.statusCode === 0) {
+            if(chkdata.data.check == false) {
+                setCheckNick("이미 존재하는 닉네임입니다.")
+            }
+            if(chkdata.data.check == true) {
+                setCheckNick("사용 가능한 닉네임입니다.")
+            }
+        }
+    }
+
     return (
     <>
         <Container maxWidth={"sm"}>
@@ -52,11 +66,20 @@ const Page: NextPageWithLayout = () => {
                 justifyContent={"center"}
                 alignItems={"center"}
             >
-                <TextField id={"outlined-basic"} 
-                label={"인게임 닉네임"} 
-                variant={"outlined"}
-                value = {Nick}
-                onChange={onNickHandler} />
+                <Stack spacing={2} direction={"row"} alignItems={"center"}>
+                    <TextField id={"outlined-basic"} 
+                        label={"인게임 닉네임"} 
+                        variant={"outlined"}
+                        value = {Nick}
+                        helperText= {CheckNick}
+                        onChange={onNickHandler} />
+                    <Button
+                        variant={"outlined"}
+                        onClick={handleCheckNickName}
+                    >
+                        중복 확인
+                    </Button>
+                </Stack>
             </Grid>
             <Grid
                 mt={2}

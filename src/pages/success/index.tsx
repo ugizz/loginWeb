@@ -4,16 +4,33 @@ import {Button, Container, Grid, TextField} from "@mui/material";
 import {useGuestLoginUser} from "@/quires/useGuestLogin.query";
 import {useGuestSignUpUser} from "@/quires/useGuestSignUp.query";
 import {useRouter} from "next/router";
+import { Unity, useUnityContext } from "react-unity-webgl";
 
 const Page: NextPageWithLayout = () => {
     
     const router = useRouter();
+    const unityCon = useUnityContext;
+
     let params ;
     let accessToken 
     if (typeof window !== "undefined") {
        params = new URLSearchParams(window!.location!.search!);
-       accessToken = params.get("deviceId");
-      }
+       accessToken = params.get("accessToken");
+    }
+    
+    function sendToken() {
+        console.log(accessToken)
+    }
+    const { unityProvider, sendMessage } = useUnityContext({
+        loaderUrl: "build/myunityapp.loader.js",
+        dataUrl: "build/myunityapp.data",
+        frameworkUrl: "build/myunityapp.framework.js",
+        codeUrl: "build/myunityapp.wasm",
+    });
+
+    const handleClickSpawnEnemies = async() => {
+        sendMessage("GameController", "receiveToken", accessToken);
+    }
 
     return (
     <>
@@ -26,8 +43,15 @@ const Page: NextPageWithLayout = () => {
                 xs={12}
                 justifyContent={"center"}
                 alignItems={"center"}
-            >로그인 성공!
+            >
+                <Button
+                    variant={"text"}
+                    onClick={sendToken}
+                >
+                    {accessToken}
+                </Button>
             </Grid>
+            
         </Container>
     </>
   );

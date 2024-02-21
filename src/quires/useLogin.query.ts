@@ -2,7 +2,7 @@ import axios from "axios";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-const QUERY_KEY = "https://api.ugizz.store/auth/signin";
+const QUERY_KEY = "https://api.ugizz.store/user/signin";
 
 export const useLoginUser = () => {
   const fetcher = async (
@@ -11,7 +11,7 @@ export const useLoginUser = () => {
   ) => {
     return axios
         .post(`${apiURL}`, {
-          "address": arg.id,
+          "id": arg.id,
           "passwd": arg.pw
         })
         .then((res) => {

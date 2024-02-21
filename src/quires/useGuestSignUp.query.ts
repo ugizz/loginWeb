@@ -2,7 +2,7 @@ import axios from "axios";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
-const QUERY_KEY = "https://api.ugizz.store/auth/guest/signup";
+const QUERY_KEY = "https://api.ugizz.store/user/signup/guest";
 
 export const useGuestSignUpUser = () => {
   const fetcher = async (

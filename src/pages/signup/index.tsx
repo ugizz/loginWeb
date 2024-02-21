@@ -12,6 +12,7 @@ const Page: NextPageWithLayout = () => {
     
     const router = useRouter();
     const { trigger: signUpUser  } = useSignUpUser();
+    const { trigger: guestLoginUser  } = useGuestLoginUser();
     const { trigger: checkUserName  } = useCheckUserName();
     const { trigger: checkNickName  } = useCheckNickName();
     const [Id, setId] = React.useState("");
@@ -110,14 +111,28 @@ const Page: NextPageWithLayout = () => {
         }
 
     }
+    const signup = async () => {
+        await router.push("/signup");
+    }
+    let params ;
+    let Gid
+    if (typeof window !== "undefined") {
+       params = new URLSearchParams(window!.location!.search!);
+       Gid = params.get("deviceId");
+    }
 
-    const guestjoin = async () => {
-        // 게스트 로그인 시 디바이스 아이디를 받아오는 로직
-        const deviceId = navigator.userAgent;
-        console.log("디바이스 아이디:", deviceId);
-
-        // 게스트 로그인 처리
-        await router.push("/guest");
+    const handleGuest = async () => {
+        console.log("디바이스 아이디:", Gid);
+        const Data = await guestLoginUser({gid:Gid});
+        
+        if(Data.statusCode === 0) { // 게스트 로그인 처리
+            console.log("됐냐?")
+            await router.push(`/success?accessToken=${Data.data.accessToken}`);
+        }
+        if(Data.statusCode !== 0) {
+            console.log("안됐냐?")
+            await router.push(`/guest?deviceId=${Gid}`);
+        }
     }
 
     return (
@@ -228,9 +243,7 @@ const Page: NextPageWithLayout = () => {
                 </Button>
                 <Button
                     variant={"outlined"}
-                    onClick={async (event)=>{
-                        await guestjoin();
-                    }}
+                    onClick={handleGuest}
                 >
                     게스트 로그인
                 </Button>
