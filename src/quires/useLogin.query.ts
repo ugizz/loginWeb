@@ -30,8 +30,4 @@ export const useLoginUser = () => {
   );
 
   return { trigger, data, error };
-  //return useSWRMutation(
-    //  `${QUERY_KEY}`,
-      //fetcher
-  //);
 };

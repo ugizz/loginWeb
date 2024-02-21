@@ -13,10 +13,20 @@ export const useGuestLoginUser = () => {
         .post(`${apiURL}`, {
           "guestId": arg.gid
         })
-        .then((res) => res.data);
+        .then((res) => {
+          console.log(`데이터`,res.data);
+          return res.data
+        })
+        .catch(err => {
+          console.log(`에러`,err)
+          return err
+        })
   };
-  return useSWRMutation(
-      `${QUERY_KEY}`,
-      fetcher
+
+  const { trigger, data, error } = useSWRMutation(
+    `${QUERY_KEY}`,
+    fetcher
   );
+
+  return { trigger, data, error };
 };

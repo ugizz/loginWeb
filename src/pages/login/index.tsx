@@ -1,8 +1,10 @@
 import * as React from "react";
 import { NextPageWithLayout } from "@/pages/_app";
-import {Button, Container, Grid, TextField} from "@mui/material";
+import {Button, Container, Grid, Stack, TextField} from "@mui/material";
 import {useLoginUser} from "@/quires/useLogin.query";
 import {useRouter} from "next/router";
+import { useGuestLoginUser } from "@/quires/useGuestLogin.query";
+import { useParams } from 'react-router-dom';
 import { Unity, useUnityContext } from "react-unity-webgl";
 
 
@@ -10,7 +12,8 @@ import { Unity, useUnityContext } from "react-unity-webgl";
 const Page: NextPageWithLayout = () => {
     
     const router = useRouter();
-    const { trigger: loginUser, data, error } = useLoginUser();
+    const { trigger: loginUser } = useLoginUser();
+    const { trigger: guestLoginUser } = useGuestLoginUser();
     const [Id, setId] = React.useState("");
     const [Password, setPassword] = React.useState("");
     // const unityContext = useUnityContext();
@@ -45,7 +48,7 @@ const Page: NextPageWithLayout = () => {
             //await router.push("/unity-scene");
 
             // 유니티에 토큰 전달
-            await router.push("/signup");// 여기를 unity 씬으로 연결하면 된다. 연결할때 Data2에 담긴 토큰도 같이 전달해야한다.
+            await router.push(`/login?accessToken=${Data.data.accessToken}`);// 여기를 unity 씬으로 연결하면 된다. 연결할때 Data2에 담긴 토큰도 같이 전달해야한다.
         }
 
         if (Data.statusCode !== 0) {
@@ -61,7 +64,26 @@ const Page: NextPageWithLayout = () => {
         await router.push("/signup");
     }
 
-    
+    const {deviceId} = useParams();
+
+    const params = new URLSearchParams(window.location.search);
+    let Gid = params.get("deviceId");
+
+    const handleGuest = async () => {
+        // 게스트 로그인 시 디바이스 아이디를 받아오는 로직
+        // const deviceId = navigator.userAgent;
+        console.log("디바이스 아이디:", deviceId);
+        console.log("아니 제발",Gid);
+        // const Data = await guestLoginUser({gid:Gid});
+        
+        // if(Data.statusCode === 0) { // 게스트 로그인 처리
+
+        // }
+        // if(Data.statusCode !== 0) {
+        //     console.log("됐냐?")
+        //     await history.pushState("/guest",Gid);
+        // }
+    }
 
     return (
     <>
@@ -113,12 +135,20 @@ const Page: NextPageWithLayout = () => {
                 justifyContent="center"
                 alignItems="center"
             >
+            <Stack spacing={2} direction="row" alignItems="center">
                 <Button
-                    variant="text"
+                    variant="outlined"
                     onClick={handleLoginClick}
                 >
-                    로그인
+                    일반 로그인
                 </Button>
+                <Button
+                    variant="outlined"
+                    onClick={handleGuest}
+                >
+                    게스트 로그인
+                </Button>
+            </Stack>
             </Grid>
             <Grid
                 mt={2}
@@ -130,12 +160,12 @@ const Page: NextPageWithLayout = () => {
                 alignItems="center"
             >
                 <Button
-                    variant="text"
+                    variant="outlined"
                     onClick={async (event)=>{
                         await signup();
                     }}
                 >
-                    가입하기
+                    일반 회원 가입
                 </Button>
             </Grid>
         </Container>

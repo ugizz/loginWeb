@@ -1,16 +1,18 @@
 import * as React from "react";
 import { NextPageWithLayout } from "@/pages/_app";
 import {Button, Container, Grid, TextField} from "@mui/material";
-import {useLoginUser} from "@/quires/useLogin.query";
+import {useGuestLoginUser} from "@/quires/useGuestLogin.query";
 import {useRouter} from "next/router";
-
+import { useParams } from "next/navigation";
 
 const Page: NextPageWithLayout = () => {
     
     const router = useRouter();
-    const { trigger: loginUser  } = useLoginUser();
+    const { trigger: guestLoginUser  } = useGuestLoginUser();
     const [GId, setGId] = React.useState("");
     const [Password, setPassword] = React.useState("");
+
+    const { dataFromOtherPage } = useParams();
 
     const onIdHandler = e => {
         setGId(e.target.value)
@@ -34,6 +36,7 @@ const Page: NextPageWithLayout = () => {
     return (
     <>
         <Container maxWidth="sm">
+            <p>Data from other page: {dataFromOtherPage}</p>
             <Grid
                 mt={2}
                 mb={2}
@@ -79,7 +82,7 @@ const Page: NextPageWithLayout = () => {
                 <Button
                     variant="text"
                     onClick={async (event)=>{
-                        loginUser({id:GId,pw:Password})
+                        //loginUser({id:GId,pw:Password})
                         await join();
                     }}
                 >
