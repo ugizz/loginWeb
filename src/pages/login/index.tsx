@@ -1,9 +1,11 @@
 import * as React from "react";
 import { NextPageWithLayout } from "@/pages/_app";
-import {Button, Container, Grid, Stack, TextField} from "@mui/material";
+import {Button, Chip, Container, Grid, Stack, TextField} from "@mui/material";
+import Divider from '@mui/material/Divider';
 import {useLoginUser} from "@/quires/useLogin.query";
 import {useRouter} from "next/router";
 import { useGuestLoginUser } from "@/quires/useGuestLogin.query";
+import { bimage } from "@/components/layout";
 
 const Page: NextPageWithLayout = () => {
     
@@ -59,10 +61,26 @@ const Page: NextPageWithLayout = () => {
             await router.push(`/guest?deviceId=${Gid}`);
         }
     }
+    
 
     return (
     <>
-        <Container maxWidth={"sm"}>
+        <Container maxWidth={"sm"} style={bimage}>
+            <Grid
+                mt={2}
+                mb={2}
+                container
+                item
+                xs={12}
+                justifyContent={"center"}
+                alignItems={"center"}
+                fontSize={40}
+            >
+                로그인
+            </Grid>
+            <Divider orientation="horizontal" flexItem sx={{ borderRightWidth: 5 }}>
+                <Chip label="내용을 입력해주세요" size="small" />
+                </Divider>
             <Grid
                 mt={2}
                 mb={2}

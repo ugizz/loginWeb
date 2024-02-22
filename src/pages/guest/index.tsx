@@ -1,10 +1,12 @@
 import * as React from "react";
 import { NextPageWithLayout } from "@/pages/_app";
-import {Button, Container, Grid, TextField, Stack} from "@mui/material";
+import {Button, Container, Grid, TextField, Stack, Chip, Divider} from "@mui/material";
 import {useGuestLoginUser} from "@/quires/useGuestLogin.query";
 import {useGuestSignUpUser} from "@/quires/useGuestSignUp.query";
-import {useRouter} from "next/router";
 import {useCheckNickName} from "@/quires/useCheckNickName.query";
+import {useRouter} from "next/router";
+import { bimage } from "@/components/layout";
+
 
 const Page: NextPageWithLayout = () => {
     
@@ -56,7 +58,6 @@ const Page: NextPageWithLayout = () => {
             await router.push(`/success?accessToken=${Data2.data.accessToken}&nickname=${Data2.data.nickname}`);
         }
         if(Data.statusCode !== 0) {
-            console.log(`다시해봐`)
             return
         }
     }
@@ -81,7 +82,23 @@ const Page: NextPageWithLayout = () => {
 
     return (
     <>
-        <Container maxWidth={"sm"}>
+        
+        <Container maxWidth={"sm"} style={bimage}>
+            <Grid
+                mt={2}
+                mb={2}
+                container
+                item
+                xs={12}
+                justifyContent={"center"}
+                alignItems={"center"}
+                fontSize={35}
+            >
+                게스트 회원 가입
+            </Grid>
+            <Divider orientation="horizontal" flexItem sx={{ borderRightWidth: 5 }}>
+                <Chip label="내용을 입력해주세요" size="small"  />
+            </Divider>
             <Grid
                 mt={2}
                 mb={2}

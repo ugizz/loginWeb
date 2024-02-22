@@ -1,11 +1,13 @@
 import * as React from "react";
 import { NextPageWithLayout } from "@/pages/_app";
-import {Button, Container, Grid, Stack, TextField} from "@mui/material";
+import {Button, Chip, Container, Grid, Stack, TextField} from "@mui/material";
 import {useSignUpUser} from "@/quires/useSignUp.query";
 import {useCheckUserName} from "@/quires/useCheckUserName.query";
 import {useCheckNickName} from "@/quires/useCheckNickName.query";
 import { useGuestLoginUser } from "@/quires/useGuestLogin.query";
 import {useRouter} from "next/router";
+import Divider from '@mui/material/Divider';
+import { bimage } from "@/components/layout";
 
 
 const Page: NextPageWithLayout = () => {
@@ -145,8 +147,24 @@ const Page: NextPageWithLayout = () => {
 
     return (
     <>
-        <Container maxWidth={"sm"}>
-        <Stack spacing={2} direction={"column"}>
+        <Container maxWidth={"sm"} style={bimage}>
+            <Grid
+                mt={2}
+                mb={2}
+                container
+                item
+                xs={12}
+                justifyContent={"center"}
+                alignItems={"center"}
+                fontSize={40}
+            >
+                회원 가입
+            </Grid>
+            <Divider orientation="horizontal" flexItem sx={{ borderRightWidth: 5 }}>
+                <Chip label="내용을 입력해주세요" size="small"  />
+            </Divider>
+            <Grid>
+                <Stack spacing={2} direction={"column"}>
             <Stack spacing={2} direction={"row"} alignItems={"center"}>
                 <TextField id={"outlined-basic" }
                 label={"아이디" }
@@ -233,6 +251,8 @@ const Page: NextPageWithLayout = () => {
                 </Button>
             </Stack>
             </Stack>
+            </Grid>
+            
             {Error && (
                         <Grid item xs={12}>
                             <p style={{ color: "red" }}>{Error}</p>
