@@ -4,10 +4,6 @@ import {Button, Container, Grid, Stack, TextField} from "@mui/material";
 import {useLoginUser} from "@/quires/useLogin.query";
 import {useRouter} from "next/router";
 import { useGuestLoginUser } from "@/quires/useGuestLogin.query";
-import { useParams } from 'react-router-dom';
-import { Unity, useUnityContext } from "react-unity-webgl";
-
-
 
 const Page: NextPageWithLayout = () => {
     
@@ -16,32 +12,26 @@ const Page: NextPageWithLayout = () => {
     const { trigger: guestLoginUser } = useGuestLoginUser();
     const [Id, setId] = React.useState("");
     const [Password, setPassword] = React.useState("");
-    // const unityContext = useUnityContext();
 
     const [Error, setError] = React.useState("");
 
     const onIdHandler = e => {
         setId(e.target.value)
-        console.log(e.target.value)
-        console.log(`id:`,Id);
     };
 
     const onPasswordHandler =e => {
         setPassword(e.target.value)
-        console.log(e.target.value)
     };
 
     const handleLoginClick = async (event)=>{
         const Data = await loginUser({id:Id,pw:Password});
         
         if(Data.statusCode === 0) {
-            console.log(`이것도!${Data.data.accessToken}`);
             location.href = "uniwebview://action?accessToken="+Data.data.accessToken+"&nickname="+Data.data.nickname;
-            await router.push(`/success?accessToken=${Data.data.accessToken}&nickname=${Data.data.nickname}`);// 여기를 unity 씬으로 연결하면 된다. 연결할때 Data2에 담긴 토큰도 같이 전달해야한다.
+            await router.push(`/success?accessToken=${Data.data.accessToken}&nickname=${Data.data.nickname}`);
         }
 
         if (Data.statusCode !== 0) {
-            console.log(`Error!`,Data.message)
             setError("존재하지 않는 아이디이거나 비밀번호가 일치하지 않습니다.")
             return
         }
@@ -59,16 +49,13 @@ const Page: NextPageWithLayout = () => {
     }
 
     const handleGuest = async () => {
-        console.log("디바이스 아이디:", Gid);
         const Data = await guestLoginUser({gid:Gid});
         
         if(Data.statusCode === 0) { // 게스트 로그인 처리
-            console.log("됐냐?")
             location.href = "uniwebview://action?accessToken="+Data.data.accessToken+"&nickname="+Data.data.nickname;
             await router.push(`/success?accessToken=${Data.data.accessToken}&nickname=${Data.data.nickname}`);
         }
         if(Data.statusCode !== 0) {
-            console.log("안됐냐?")
             await router.push(`/guest?deviceId=${Gid}`);
         }
     }

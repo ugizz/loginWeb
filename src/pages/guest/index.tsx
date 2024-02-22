@@ -5,7 +5,6 @@ import {useGuestLoginUser} from "@/quires/useGuestLogin.query";
 import {useGuestSignUpUser} from "@/quires/useGuestSignUp.query";
 import {useRouter} from "next/router";
 import {useCheckNickName} from "@/quires/useCheckNickName.query";
-import { useParams } from "next/navigation";
 
 const Page: NextPageWithLayout = () => {
     
@@ -16,6 +15,8 @@ const Page: NextPageWithLayout = () => {
     const [Nick, setNick] = React.useState("");
     const [CheckNick, setCheckNick] = React.useState("");
     const [color2, setcolor2] = React.useState<"error" | "warning" | "success" | "primary" | "secondary" | "info">("primary");
+
+    const [Error, setError] = React.useState("");
 
     const onNickHandler = e => {
         setNick(e.target.value)
@@ -31,12 +32,28 @@ const Page: NextPageWithLayout = () => {
       }
 
 
+      const validateInputs = (): boolean => {
+        if (!Nick.trim()) {
+            setError("값을 입력해주세요.");
+            return false;
+        }
+        
+        if (CheckNick === "" ) {
+            setError("닉네임 중복 확인 후 다시 시도해주세요.")
+            return false;
+        }
+        // 여기에서 추가적인 유효성 검사를 수행할 수 있습니다.
+        return true;
+    };
     const handleGuest = async () => {
+        if (!validateInputs()){
+            return
+        }
         const Data = await guestSignUpUser({gid:Gid,nick:Nick});
         if(Data.statusCode === 0) {
             const Data2 = await guestLoginUser({gid:Gid});
-            location.href = "uniwebview://action?accessToken="+Data.data.accessToken+"&nickname="+Data.data.nickname;
-            await router.push(`/success?accessToken=${Data2.data.accessToken}&nickname=${Data.data.nickname}`);
+            location.href = "uniwebview://action?accessToken="+Data2.data.accessToken+"&nickname="+Data2.data.nickname;
+            await router.push(`/success?accessToken=${Data2.data.accessToken}&nickname=${Data2.data.nickname}`);
         }
         if(Data.statusCode !== 0) {
             console.log(`다시해봐`)
@@ -57,7 +74,7 @@ const Page: NextPageWithLayout = () => {
             }
         }
         if(chkdata.statusCode !== 0){
-            setCheckNick("올바른 형식을 입력해주세요.")
+            setError("입력한 닉네임 형식이 올바르지 않습니다.")
             setcolor2("warning")
         }
     }
@@ -91,6 +108,11 @@ const Page: NextPageWithLayout = () => {
                         중복 확인
                     </Button>
                 </Stack>
+                {Error && (
+                        <Grid item xs={12}>
+                            <p style={{ color: "red" }}>{Error}</p>
+                        </Grid>
+                    )}
             </Grid>
             <Grid
                 mt={2}

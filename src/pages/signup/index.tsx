@@ -132,16 +132,13 @@ const Page: NextPageWithLayout = () => {
     }
 
     const handleGuest = async () => {
-        console.log("디바이스 아이디:", Gid);
         const Data = await guestLoginUser({gid:Gid});
         
         if(Data.statusCode === 0) { // 게스트 로그인 처리
-            console.log("됐냐?")
             location.href = "uniwebview://action?accessToken="+Data.data.accessToken;
             await router.push(`/success?accessToken=${Data.data.accessToken}`);
         }
         if(Data.statusCode !== 0) {
-            console.log("안됐냐?")
             await router.push(`/guest?deviceId=${Gid}`);
         }
     }
