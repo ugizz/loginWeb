@@ -22,16 +22,6 @@ const Page: NextPageWithLayout = () => {
         location.href = "uniwebview://action?accessToken="+accessToken;
         
     }
-    const { unityProvider, sendMessage } = useUnityContext({
-        loaderUrl: "build/myunityapp.loader.js",
-        dataUrl: "build/myunityapp.data",
-        frameworkUrl: "build/myunityapp.framework.js",
-        codeUrl: "build/myunityapp.wasm",
-    });
-
-    const handleClickSpawnEnemies = async() => {
-        sendMessage("GameController", "receiveToken", accessToken);
-    }
 
     return (
     <>

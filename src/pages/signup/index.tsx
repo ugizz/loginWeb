@@ -22,11 +22,15 @@ const Page: NextPageWithLayout = () => {
     const [Nick, setNick] = React.useState("");
     const [CheckId, setCheckId] = React.useState("");
     const [CheckNick, setCheckNick] = React.useState("");
+    const [color1, setcolor1] = React.useState<"error" | "warning" | "success" | "primary" | "secondary" | "info">("primary");
+    const [color2, setcolor2] = React.useState<"error" | "warning" | "success" | "primary" | "secondary" | "info">("primary");
 
     const [Error, setError] = React.useState("");
 
     const onIdHandler = e => {
         setId(e.target.value)
+        setCheckId("")
+        setcolor1("primary")
     };
 
     const onPasswordHandler =e => {
@@ -43,6 +47,8 @@ const Page: NextPageWithLayout = () => {
 
     const onNickHandler =e => {
         setNick(e.target.value)
+        setCheckNick("")
+        setcolor2("primary")
     };
 
     const validateInputs = (): boolean => {
@@ -74,6 +80,7 @@ const Page: NextPageWithLayout = () => {
     
         if(Data.statusCode === 0) {
         console.log(`이것도!${Data}`);
+        alert('회원가입에 성공했습니다.')
         await router.push("/login"); 
         }
     }
@@ -91,10 +98,16 @@ const Page: NextPageWithLayout = () => {
         if(chkdata.statusCode === 0) {
             if(chkdata.data.check == false) {
                 setCheckId("이미 존재하는 아이디입니다.")
+                setcolor1("warning")
             }
             if(chkdata.data.check == true) {
                 setCheckId("사용 가능한 아이디입니다.")
+                setcolor1("success")
             }
+        }
+        if(chkdata.statusCode !== 0){
+            setCheckId("올바른 형식을 입력해주세요.")
+            setcolor1("warning")
         }
 
     }
@@ -104,10 +117,16 @@ const Page: NextPageWithLayout = () => {
         if(chkdata.statusCode === 0) {
             if(chkdata.data.check == false) {
                 setCheckNick("이미 존재하는 닉네임입니다.")
+                setcolor2("warning")
             }
             if(chkdata.data.check == true) {
                 setCheckNick("사용 가능한 닉네임입니다.")
+                setcolor2("success")
             }
+        }
+        if(chkdata.statusCode !== 0){
+            setCheckNick("올바른 형식을 입력해주세요.")
+            setcolor2("warning")
         }
 
     }
@@ -143,8 +162,10 @@ const Page: NextPageWithLayout = () => {
                 <TextField id={"outlined-basic" }
                 label={"아이디" }
                 variant={"outlined"}
+                color={color1}
                 helperText= {CheckId}
                 value = {Id}
+                focused={Id.length>0 ? true:false}
                 onChange={onIdHandler} 
                 />
                 <Button
@@ -210,8 +231,10 @@ const Page: NextPageWithLayout = () => {
                 label={"인게임 닉네임" }
                 variant={"outlined"}
                 helperText= {CheckNick}
+                color={color2}
                 value = {Nick}
                 onChange={onNickHandler}
+                focused = {Nick.length>0?true:false}
                 />
                 <Button
                     variant={"outlined"}
@@ -238,6 +261,7 @@ const Page: NextPageWithLayout = () => {
                 <Button
                     variant={"outlined"}
                     onClick={handleSingUpClick}
+                    
                 >
                     가입하기
                 </Button>

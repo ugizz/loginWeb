@@ -15,11 +15,12 @@ const Page: NextPageWithLayout = () => {
     const { trigger: checkNickName  } = useCheckNickName();
     const [Nick, setNick] = React.useState("");
     const [CheckNick, setCheckNick] = React.useState("");
+    const [color2, setcolor2] = React.useState<"error" | "warning" | "success" | "primary" | "secondary" | "info">("primary");
 
     const onNickHandler = e => {
         setNick(e.target.value)
-        console.log(e.target.value)
-        console.log(Nick);
+        setCheckNick("")
+        setcolor2("primary")
     };
 
     let params ;
@@ -48,10 +49,16 @@ const Page: NextPageWithLayout = () => {
         if(chkdata.statusCode === 0) {
             if(chkdata.data.check == false) {
                 setCheckNick("이미 존재하는 닉네임입니다.")
+                setcolor2("warning")
             }
             if(chkdata.data.check == true) {
                 setCheckNick("사용 가능한 닉네임입니다.")
+                setcolor2("success")
             }
+        }
+        if(chkdata.statusCode !== 0){
+            setCheckNick("올바른 형식을 입력해주세요.")
+            setcolor2("warning")
         }
     }
 
@@ -72,8 +79,11 @@ const Page: NextPageWithLayout = () => {
                         label={"인게임 닉네임"} 
                         variant={"outlined"}
                         value = {Nick}
+                        color={color2}
                         helperText= {CheckNick}
-                        onChange={onNickHandler} />
+                        onChange={onNickHandler}
+                        focused = {Nick.length>0?true:false}
+                    />
                     <Button
                         variant={"outlined"}
                         onClick={handleCheckNickName}
