@@ -60,6 +60,10 @@ const Page: NextPageWithLayout = () => {
             setError("비밀번호가 일치하지 않습니다.")
             return false;
         }
+        if (CheckId === "" || CheckNick === "" ) {
+            setError("아이디/닉네임 중복 확인 후 다시 시도해주세요.")
+            return false;
+        }
         // 여기에서 추가적인 유효성 검사를 수행할 수 있습니다.
         return true;
     };
@@ -70,27 +74,16 @@ const Page: NextPageWithLayout = () => {
         }
 
         const Data = await signUpUser({ id:Id, pw: Password, email:Email, nick:Nick });
-        console.log(`이 데이터는!!!! `+Data);
         
         if (Data.statusCode !== 0) {
-            console.log(`Error!`,Data)
             setError("이미 존재하는 아이디/닉네임이거나 형식이 올바르지 않습니다.")
             return
         }
     
         if(Data.statusCode === 0) {
-        console.log(`이것도!${Data}`);
         alert('회원가입에 성공했습니다.')
         await router.push("/login"); 
         }
-    }
-
-    const join = async () => {
-        if (!validateInputs()) {
-            return;
-        }
-        await signUpUser({ id:Id, pw: Password, email:Email, nick:Nick });
-        await router.push("/login");
     }
 
     const handleCheckUserId = async (event) => {
@@ -130,9 +123,7 @@ const Page: NextPageWithLayout = () => {
         }
 
     }
-    const signup = async () => {
-        await router.push("/signup");
-    }
+    
     let params ;
     let Gid
     if (typeof window !== "undefined") {
@@ -146,6 +137,7 @@ const Page: NextPageWithLayout = () => {
         
         if(Data.statusCode === 0) { // 게스트 로그인 처리
             console.log("됐냐?")
+            location.href = "uniwebview://action?accessToken="+Data.data.accessToken;
             await router.push(`/success?accessToken=${Data.data.accessToken}`);
         }
         if(Data.statusCode !== 0) {
@@ -234,7 +226,7 @@ const Page: NextPageWithLayout = () => {
                 color={color2}
                 value = {Nick}
                 onChange={onNickHandler}
-                focused = {Nick.length>0?true:false}
+                focused = {Nick.length>0 ? true:false}
                 />
                 <Button
                     variant={"outlined"}
