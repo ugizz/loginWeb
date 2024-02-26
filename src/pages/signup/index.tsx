@@ -23,6 +23,7 @@ const Page: NextPageWithLayout = () => {
     const [Email, setEmail] = React.useState("");
     const [Nick, setNick] = React.useState("");
     const [CheckId, setCheckId] = React.useState("");
+    const [CheckPwd, setCheckPwd] = React.useState("");
     const [CheckNick, setCheckNick] = React.useState("");
     const [color1, setcolor1] = React.useState<"error" | "warning" | "success" | "primary" | "secondary" | "info">("primary");
     const [color2, setcolor2] = React.useState<"error" | "warning" | "success" | "primary" | "secondary" | "info">("primary");
@@ -36,7 +37,16 @@ const Page: NextPageWithLayout = () => {
     };
 
     const onPasswordHandler =e => {
+        const pwRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?!.*\s).{13,}$/
+        const currentPasswd = e.target.value
         setPassword(e.target.value)
+        if (currentPasswd === "") {
+            setCheckPwd('')
+        }else if (!pwRegex.test(currentPasswd)) {
+            setCheckPwd('숫자, 대문자/소문자, 특수문자, 13자리 이상 필수로 입력해주세요!')
+        } else {
+            setCheckPwd('사용 가능한 비밀번호입니다.')
+        }
     };
 
     const onPasswordconHandler =e => {
@@ -196,7 +206,8 @@ const Page: NextPageWithLayout = () => {
                 type={"password"}
                 autoComplete={"current-password"}
                 value = {Password}
-                onChange={onPasswordHandler} 
+                onChange={onPasswordHandler}
+                helperText={CheckPwd}
                 />
             </Grid>
             <Grid
