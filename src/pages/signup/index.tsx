@@ -94,8 +94,8 @@ const Page: NextPageWithLayout = () => {
         
         if (Data.statusCode !== 0) {
             // setError("이미 존재하는 아이디/닉네임이거나 형식이 올바르지 않습니다.")
-            console.log(Data.response.data.message)
-            setError(Data.response.data.message)
+            console.log(Data.response.data.message[0])
+            setError(Data.response.data.message[0])
             return
         }
     
