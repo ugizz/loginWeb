@@ -43,7 +43,7 @@ const Page: NextPageWithLayout = () => {
         if (currentPasswd === "") {
             setCheckPwd('')
         }else if (!pwRegex.test(currentPasswd)) {
-            setCheckPwd('숫자, 대문자/소문자, 특수문자, 13자리 이상 필수로 입력해주세요!')
+            setCheckPwd('숫자, 대문자/소문자, 특수문자 포함 13자리 이상 필수로 입력해주세요!')
         } else {
             setCheckPwd('사용 가능한 비밀번호입니다.')
         }
@@ -72,6 +72,11 @@ const Page: NextPageWithLayout = () => {
             setError("비밀번호가 일치하지 않습니다.")
             return false;
         }
+        const pwRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*?+=])(?!.*\s).{13,}$/
+        if (!pwRegex.test(Password)) {
+            setError("비밀번호 형식을 확인해주세요.")
+            return false
+        }
         if (CheckId === "" || CheckNick === "" ) {
             setError("아이디/닉네임 중복 확인 후 다시 시도해주세요.")
             return false;
@@ -88,7 +93,9 @@ const Page: NextPageWithLayout = () => {
         const Data = await signUpUser({ id:Id, pw: Password, email:Email, nick:Nick });
         
         if (Data.statusCode !== 0) {
-            setError("이미 존재하는 아이디/닉네임이거나 형식이 올바르지 않습니다.")
+            // setError("이미 존재하는 아이디/닉네임이거나 형식이 올바르지 않습니다.")
+            console.log(Data.response.data.message)
+            setError(Data.response.data.message)
             return
         }
     
@@ -147,8 +154,8 @@ const Page: NextPageWithLayout = () => {
         const Data = await guestLoginUser({gid:Gid});
         
         if(Data.statusCode === 0) { // 게스트 로그인 처리
-            location.href = "uniwebview://action?accessToken="+Data.data.accessToken;
-            await router.push(`/success?accessToken=${Data.data.accessToken}`);
+            location.href = "uniwebview://action?accessToken="+Data.data.accessToken+"&nickname="+Data.data.nickname;
+            await router.push(`/success?accessToken=${Data.data.accessToken}&nickname=${Data.data.nickname}`);
         }
         if(Data.statusCode !== 0) {
             await router.push(`/guest?deviceId=${Gid}`);

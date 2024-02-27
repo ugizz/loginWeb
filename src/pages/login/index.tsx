@@ -40,9 +40,6 @@ const Page: NextPageWithLayout = () => {
     
     }
 
-    const signup = async () => {
-        await router.push("/signup");
-    }
     let params ;
     let Gid
     if (typeof window !== "undefined") {
@@ -50,6 +47,9 @@ const Page: NextPageWithLayout = () => {
        Gid = params.get("deviceId");
     }
 
+    const signup = async () => {
+        await router.push(`/signup?deviceId=${Gid}`);
+    }
     const handleGuest = async () => {
         const Data = await guestLoginUser({gid:Gid});
         
